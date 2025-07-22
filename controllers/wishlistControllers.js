@@ -71,7 +71,7 @@ exports.getWishlist = async (req, res) => {
       await user.save();
     }
 
-    res.json({ wishlist });
+    res.json({ length: wishlist.items.length, wishlist });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }

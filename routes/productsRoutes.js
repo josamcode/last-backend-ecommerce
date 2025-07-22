@@ -12,6 +12,8 @@ const {
   deleteProduct,
   getCategories,
   getTopRatedProducts,
+  getBrands,
+  searchProducts,
 } = require("../controllers/productsControllers");
 const upload = require("../middlewares/upload");
 
@@ -24,8 +26,12 @@ router.post(
   createProduct
 );
 
-// GET categories first
+// SEARCH Route
+router.get("/search", searchProducts);
+
+// GET categories and brands
 router.get("/categories", getCategories);
+router.get("/brands", getBrands);
 
 // GET all products
 router.get("/", getProducts);

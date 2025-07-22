@@ -54,6 +54,24 @@ exports.createUser = async (req, res) => {
   }
 };
 
+exports.getUsers = async (req, res) => {
+  try {
+    const users = await User.find().select("-password");
+
+    res.status(200).json({
+      message: "Users fetched successfully",
+      count: users.length,
+      users,
+    });
+  } catch (err) {
+    res.status(500).json({
+      message: "Server error while fetching users",
+      error: err.message,
+    });
+  }
+};
+
+
 exports.getUser = async (req, res) => {
   try {
     const userId = req.user.id;

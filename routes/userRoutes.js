@@ -7,18 +7,16 @@ const {
   loginUser,
   updateUser,
   deleteUser,
-  addToCart,
-  removeFromCart,
-  updateProductQuantity,
-  clearCart,
+  getUsers,
 } = require("../controllers/usersControllers");
-const { verifyToken } = require("../middlewares/auth");
+const { verifyToken, isAdmin } = require("../middlewares/auth");
 
 // User routes
 router.post("/auth/register", createUser);
 router.post("/auth/login", loginUser);
+router.get("/users", verifyToken, isAdmin, getUsers);
 router.get("/me", verifyToken, getUser);
 router.put("/update", verifyToken, updateUser);
-router.delete("/delete", verifyToken, deleteUser);
+router.delete("/delete", verifyToken, isAdmin, deleteUser);
 
 module.exports = router;

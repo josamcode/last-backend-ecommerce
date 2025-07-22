@@ -83,6 +83,7 @@ exports.createProduct = async (req, res) => {
 };
 
 // READ All Products - Public
+// READ All Products - Public
 exports.getProducts = async (req, res) => {
   try {
     const {
@@ -92,6 +93,8 @@ exports.getProducts = async (req, res) => {
       maxPrice,
       page = 1,
       limit = 10,
+      q,
+      discounted,
     } = req.query;
 
     // Build filter object
@@ -100,10 +103,26 @@ exports.getProducts = async (req, res) => {
     if (category) filter.category = category;
     if (brand) filter.brand = brand;
 
+    // Price range
     if (minPrice || maxPrice) {
       filter.price = {};
       if (minPrice) filter.price.$gte = parseFloat(minPrice);
       if (maxPrice) filter.price.$lte = parseFloat(maxPrice);
+    }
+
+    // Search
+    if (q) {
+      const regex = new RegExp(q, "i"); // case-insensitive
+      filter.$or = [
+        { title: regex },
+        { description: regex },
+        { brand: regex },
+        { category: regex },
+      ];
+    }
+
+    if (discounted === "true") {
+      filter.discount = { $exists: true, $ne: 0 };
     }
 
     const skip = (page - 1) * limit;
@@ -132,6 +151,34 @@ exports.getProducts = async (req, res) => {
 // GET /api/products?category=women&minPrice=200&maxPrice=500
 // GET /api/products?brand=Adidas&limit=5&page=1
 // GET /api/products?page=2&limit=5
+// GET /api/products/categories
+// GET /api/products/brands
+
+// SEARCH Products
+exports.searchProducts = async (req, res) => {
+  try {
+    const { q } = req.query;
+
+    if (!q) {
+      return res.status(400).json({ message: "Search query is required" });
+    }
+
+    const regex = new RegExp(q, "g");
+
+    const products = await Product.find({
+      $or: [
+        { title: regex },
+        { description: regex },
+        { brand: regex },
+        { category: regex },
+      ],
+    });
+
+    res.json({ data: products });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
 
 // Get Categories
 exports.getCategories = async (req, res) => {
@@ -139,6 +186,17 @@ exports.getCategories = async (req, res) => {
     const categories = await Product.distinct("category");
 
     res.json(categories);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+// Get brands
+exports.getBrands = async (req, res) => {
+  try {
+    const brands = await Product.distinct("brand");
+
+    res.json(brands);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }

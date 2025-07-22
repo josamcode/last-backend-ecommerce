@@ -37,7 +37,7 @@ exports.getCart = async (req, res) => {
       });
     }
 
-    res.json({ cart: user.cart });
+    res.json({ length: user.cart.items.length, cart: user.cart });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -81,7 +81,7 @@ exports.addToCart = async (req, res) => {
       await user.save();
     }
 
-    res.json({ message: "Added to cart", cart });
+    res.json({ success: true, message: "Added to cart", cart });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }

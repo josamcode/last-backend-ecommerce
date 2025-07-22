@@ -10,9 +10,11 @@ const {
   deleteOrder,
   applyCoupon,
   removeCouponFromOrders,
+  getOrderById,
 } = require("../controllers/ordersControllers");
 
 router.get("/", verifyToken, getOrders);
+router.get('/:id',verifyToken, getOrderById);
 router.post("/", verifyToken, createOrder);
 router.put("/shipping/:id", verifyToken, updateShipping);
 router.put("/status/:id", verifyToken, isAdmin, updateOrderStatus);
