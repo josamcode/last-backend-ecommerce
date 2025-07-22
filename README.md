@@ -138,4 +138,57 @@ This is a fully functional backend system for an e-commerce website, built using
 // GET /api/products/brands
 ```
 
-... (Rest of the endpoints remain unchanged for brevity)
+---
+
+## 📝 Environment Variables
+
+Create a `.env` file in the root directory with the following:
+
+```env
+PORT=5000
+MONGO_URI=mongodb+srv://<username>:<password>@cluster.mongodb.net/ecommerce
+JWT_SECRET=your_jwt_secret_key
+```
+
+---
+
+## 🚀 Running the Project
+
+### 1. Install Dependencies
+
+```bash
+npm install
+```
+
+### 2. Start the Server
+
+```bash
+npm start
+```
+
+The server will run on `http://localhost:5000`.
+
+---
+
+## 📸 Public Folder
+
+All uploaded product images are stored in the `public/images/products` folder.
+
+---
+
+## 📜 License
+
+This project is licensed under the MIT License.
+
+---
+
+## 🧑‍💻 Developed By
+
+[Gerges Samuel @josamcode]  
+Frontend & Backend Developer
+
+---
+
+> 💡 Tip: You can expand this backend with payment gateway integration (e.g., Stripe, PayPal), search & filtering enhancements, and caching (e.g., Redis) for better performance.
+
+---
