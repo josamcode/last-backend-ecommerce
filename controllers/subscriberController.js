@@ -4,18 +4,27 @@ const Subscriber = require("../models/Subscriber");
 exports.addSubscriber = async (req, res) => {
   try {
     const { email } = req.body;
+    const userId = req.user.id;
+
     if (!email) return res.status(400).json({ message: "Email is required" });
 
-    const existing = await Subscriber.findOne({ email });
-    if (existing)
+    const existingByUser = await Subscriber.findOne({ userId });
+    if (existingByUser)
+      return res.status(409).json({ message: "User already has a subscribed email" });
+
+    const existingByEmail = await Subscriber.findOne({ email });
+    if (existingByEmail)
       return res.status(409).json({ message: "Email already subscribed" });
 
-    const subscriber = await Subscriber.create({ email });
+    const subscriber = await Subscriber.create({ email, userId });
     res.status(201).json({ success: true, subscriber });
   } catch (err) {
+    console.error("AddSubscriber Error:", err);
+
     res.status(500).json({ message: "Server error", error: err.message });
   }
 };
+
 
 // GET /api/subscribers
 exports.getAllSubscribers = async (req, res) => {
