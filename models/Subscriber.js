@@ -8,6 +8,14 @@ const subscriberSchema = new mongoose.Schema(
       required: true,
       unique: true,
     },
+    username: {
+      type: String,
+      required: true,
+    },
+    phone: {
+      type: String,
+      required: true,
+    },
     email: {
       type: String,
       required: true,

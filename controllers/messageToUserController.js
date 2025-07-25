@@ -1,4 +1,5 @@
 const MessageToUser = require("../models/MessageToUser");
+const User = require("../models/User");
 
 // Admin: Send message to user
 exports.createMessage = async (req, res) => {
@@ -15,6 +16,54 @@ exports.createMessage = async (req, res) => {
     res.status(201).json({ success: true, message });
   } catch (err) {
     res.status(500).json({ success: false, error: err.message });
+  }
+};
+
+// Admin: Send message to ALL users
+exports.createMessageToAll = async (req, res) => {
+  try {
+    const { content, type } = req.body;
+    
+    if (!content || content.trim().length === 0) {
+      return res.status(400).json({ 
+        success: false, 
+        error: "Message content is required" 
+      });
+    }
+
+    const users = await User.find({ role: { $ne: "admin" } }, "_id");
+    
+    if (!users || users.length === 0) {
+      return res.status(404).json({ 
+        success: false, 
+        error: "No users found to send messages to" 
+      });
+    }
+
+    // Create message records for each user
+    const messages = users.map(user => ({
+      sender: req.user.id,
+      receiver: user._id,
+      content: content.trim(),
+      type: type || "general",
+    }));
+
+    // Insert all messages at once
+    const createdMessages = await MessageToUser.insertMany(messages);
+
+    res.status(201).json({ 
+      success: true, 
+      message: `Message sent to ${createdMessages.length} users`,
+      count: createdMessages.length,
+      messages: createdMessages 
+    });
+  } catch (err) {
+    console.error("Error sending message to all users:", err);
+    res.status(500).json({ 
+      success: false, 
+      error: "Failed to send message to all users",
+      details: err.message 
+    });
   }
 };
 

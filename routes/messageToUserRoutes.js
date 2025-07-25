@@ -7,6 +7,7 @@ const {
   updateMessage,
   deleteMessage,
   markMessagesAsRead,
+  createMessageToAll,
 } = require("../controllers/messageToUserController.js");
 const { verifyToken, isAdmin } = require("../middlewares/auth");
 
@@ -14,6 +15,9 @@ const router = express.Router();
 
 // Admin: create message
 router.post("/", verifyToken, isAdmin, createMessage);
+
+// Admin: send message to all users
+router.post("/all", verifyToken, isAdmin, createMessageToAll);
 
 // Admin: get all messages
 router.get("/", verifyToken, isAdmin, getAllMessages);

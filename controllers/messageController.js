@@ -1,9 +1,9 @@
 const Message = require("../models/Message");
+const User = require("../models/User");
 
 exports.createMessage = async (req, res) => {
   try {
     const { message } = req.body;
-
     const trimmedMessage = message?.trim();
 
     if (!trimmedMessage) {
@@ -11,14 +11,19 @@ exports.createMessage = async (req, res) => {
     }
 
     if (trimmedMessage.length < 6) {
-      return res
-        .status(400)
-        .json({ message: "Your Message is too short!" });
+      return res.status(400).json({ message: "Your Message is too short!" });
+    }
+
+    const user = await User.findById(req.user.id);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
     }
 
     const newMessage = new Message({
-      userId: req.user.id,
+      userId: user._id,
+      username: user.username,
       message: trimmedMessage,
+      phone: user.phone,
     });
 
     const savedMessage = await newMessage.save();

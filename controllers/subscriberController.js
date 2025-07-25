@@ -1,4 +1,5 @@
 const Subscriber = require("../models/Subscriber");
+const User = require("../models/User");
 
 // POST /api/subscribers
 exports.addSubscriber = async (req, res) => {
@@ -16,11 +17,19 @@ exports.addSubscriber = async (req, res) => {
     if (existingByEmail)
       return res.status(409).json({ message: "Email already subscribed" });
 
-    const subscriber = await Subscriber.create({ email, userId });
+    const user = await User.findById(userId);
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    const subscriber = await Subscriber.create({
+      email,
+      userId,
+      username: user.username,
+      phone: user.phone,
+    });
+
     res.status(201).json({ success: true, subscriber });
   } catch (err) {
     console.error("AddSubscriber Error:", err);
-
     res.status(500).json({ message: "Server error", error: err.message });
   }
 };
