@@ -14,7 +14,7 @@ exports.createCoupon = async (req, res) => {
 exports.getAllCoupons = async (req, res) => {
   try {
     const coupons = await Coupon.find().populate("usedBy", "username email");
-    res.status(200).json(coupons);
+    res.status(200).json({ length: coupons.length, coupons });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }

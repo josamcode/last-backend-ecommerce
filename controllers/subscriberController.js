@@ -30,7 +30,7 @@ exports.addSubscriber = async (req, res) => {
 exports.getAllSubscribers = async (req, res) => {
   try {
     const subscribers = await Subscriber.find();
-    res.status(200).json({ success: true, subscribers });
+    res.status(200).json({ success: true, length: subscribers.length, subscribers });
   } catch (err) {
     res.status(500).json({ message: "Server error", error: err.message });
   }

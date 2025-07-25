@@ -26,7 +26,7 @@ exports.getAllMessages = async (req, res) => {
       .populate("receiver", "username")
       .sort({ createdAt: -1 });
 
-    res.json({ success: true, messages });
+    res.json({ success: true, length: messages.length, messages });
   } catch (err) {
     res.status(500).json({ success: false, error: err.message });
   }

@@ -97,22 +97,19 @@ exports.getProducts = async (req, res) => {
       discounted,
     } = req.query;
 
-    // Build filter object
     const filter = {};
 
     if (category) filter.category = category;
     if (brand) filter.brand = brand;
 
-    // Price range
     if (minPrice || maxPrice) {
       filter.price = {};
       if (minPrice) filter.price.$gte = parseFloat(minPrice);
       if (maxPrice) filter.price.$lte = parseFloat(maxPrice);
     }
 
-    // Search
     if (q) {
-      const regex = new RegExp(q, "i"); // case-insensitive
+      const regex = new RegExp(q, "i");
       filter.$or = [
         { title: regex },
         { description: regex },
@@ -133,11 +130,13 @@ exports.getProducts = async (req, res) => {
       .limit(parseInt(limit));
 
     const total = await Product.countDocuments(filter);
+    const allProductsCount = await Product.countDocuments();
 
     res.json({
       page: parseInt(page),
       limit: parseInt(limit),
-      total,
+      total: total,
+      totalAllProducts: allProductsCount,
       totalPages: Math.ceil(total / limit),
       length: products.length,
       data: products,

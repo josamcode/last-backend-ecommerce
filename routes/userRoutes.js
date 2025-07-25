@@ -8,6 +8,7 @@ const {
   updateUser,
   deleteUser,
   getUsers,
+  getUserById,
 } = require("../controllers/usersControllers");
 const { verifyToken, isAdmin } = require("../middlewares/auth");
 
@@ -16,6 +17,7 @@ router.post("/auth/register", createUser);
 router.post("/auth/login", loginUser);
 router.get("/users", verifyToken, isAdmin, getUsers);
 router.get("/me", verifyToken, getUser);
+router.get("/user/:id", verifyToken, isAdmin, getUserById);
 router.put("/update", verifyToken, updateUser);
 router.delete("/delete", verifyToken, isAdmin, deleteUser);
 

@@ -143,6 +143,52 @@ exports.getOrders = async (req, res) => {
   }
 };
 
+exports.getAllOrders = async (req, res) => {
+  try {
+    const {
+      page = 1,
+      limit = 10,
+      status,
+      userId,
+      sortBy = 'createdAt',
+      sortOrder = 'desc'
+    } = req.query;
+
+    const filter = {};
+    if (status) {
+      filter.state = status;
+    }
+    if (userId) {
+      filter.userId = userId;
+    }
+
+    const sort = {};
+    sort[sortBy] = sortOrder === 'asc' ? 1 : -1;
+
+    const skip = (parseInt(page) - 1) * parseInt(limit);
+
+    const orders = await Orders.find(filter)
+      .sort(sort)
+      .skip(skip)
+      .limit(parseInt(limit))
+      .populate('userId', 'username phone');
+
+    const total = await Orders.countDocuments(filter);
+
+    res.json({
+      status: "success",
+      length: orders.length,
+      total,
+      page: parseInt(page),
+      totalPages: Math.ceil(total / parseInt(limit)),
+      orders
+    });
+  } catch (err) {
+    console.error("Error in getAllOrders:", err);
+    res.status(500).json({ message: "Failed to fetch orders", error: err.message });
+  }
+};
+
 // Get Single Order by ID
 exports.getOrderById = async (req, res) => {
   try {

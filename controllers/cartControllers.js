@@ -32,6 +32,7 @@ exports.getCart = async (req, res) => {
 
     if (!user.cart) {
       return res.status(404).json({
+        length: user.cart.items.length || 0,
         status: "empty",
         message: "Cart is empty. Add items to your cart to proceed.",
       });

@@ -61,6 +61,7 @@ exports.getWishlist = async (req, res) => {
 
     if (!user.wishlist) {
       return res.status(404).json({
+        length: user.wishlist.items.length || 0,
         status: "empty",
         message: "Wishlist is empty. Add items to your wishlist to proceed.",
       });
