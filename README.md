@@ -176,12 +176,6 @@ All uploaded product images are stored in the `public/images/products` folder.
 
 ---
 
-## 📜 License
-
-This project is licensed under the MIT License.
-
----
-
 ## 🧑‍💻 Developed By
 
 [Gerges Samuel @josamcode]  
