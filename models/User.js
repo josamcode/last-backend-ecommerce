@@ -17,6 +17,14 @@ const userSchema = new mongoose.Schema(
         "Invalid international phone number",
       ],
     },
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+      trim: true,
+      lowercase: true,
+      match: [/\S+@\S+\.\S+/, 'Invalid email address'],
+    },
     password: {
       type: String,
       required: true,
@@ -35,10 +43,16 @@ const userSchema = new mongoose.Schema(
       enum: ["user", "admin"],
       default: "user",
     },
+    isVerified: {
+      type: Boolean,
+      default: false,
+    },
+    verificationToken: {
+      type: String,
+    },
     orders: [
       { type: mongoose.Schema.Types.ObjectId, ref: "Orders", default: [] },
     ],
-
     cart: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Cart",
