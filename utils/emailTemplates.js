@@ -1,4 +1,7 @@
 // utils/emailTemplates.js
+require('dotenv').config();
+
+const BASE_URL = process.env.BASE_URL;
 
 const getVerificationEmailHTML = (username, verificationUrl) => `
   <!DOCTYPE html>
@@ -39,7 +42,7 @@ const getEmailVerificationSuccessHTML = (username) => `
     </style>
     <script>
       setTimeout(function() {
-        window.location.href = 'http://localhost:3000/login';
+        window.location.href = '${BASE_URL}/login';
       }, 5000);
     </script>
   </head>
@@ -48,7 +51,7 @@ const getEmailVerificationSuccessHTML = (username) => `
       <h1>Email Verified Successfully!</h1>
       <p class="success">Thank you, ${username}. Your email address has been confirmed.</p>
       <p>You can now log in using your email or phone number.</p>
-      <p><a href="http://localhost:3000/login">Click here to Login</a></p>
+      <p><a href="${BASE_URL}/login">Click here to Login</a></p>
       <p class="redirect">Redirecting to login page in 5 seconds...</p>
     </div>
   </body>
@@ -72,8 +75,8 @@ const getInvalidTokenHTML = () => `
     <div class="container">
       <h1>Email Verification</h1>
       <p class="error">Invalid or expired verification token.</p>
-      <p>Please check the link in your email or <a href="http://localhost:3000/register">register again</a>.</p>
-      <p><a href="http://localhost:3000/login">Go to Login</a></p>
+      <p>Please check the link in your email or <a href="${BASE_URL}/register">register again</a>.</p>
+      <p><a href="${BASE_URL}/login">Go to Login</a></p>
     </div>
   </body>
   </html>
@@ -96,7 +99,7 @@ const getMissingTokenHTML = () => `
     <div class="container">
       <h1>Email Verification</h1>
       <p class="error">Verification token is required.</p>
-      <p><a href="http://localhost:3000/login">Go to Login</a></p>
+      <p><a href="${BASE_URL}/login">Go to Login</a></p>
     </div>
   </body>
   </html>
@@ -119,7 +122,7 @@ const getGenericVerificationErrorHTML = () => `
     <div class="container">
       <h1>Email Verification</h1>
       <p class="error">An error occurred during email verification. Please try again later or contact support.</p>
-      <p><a href="http://localhost:3000/login">Go to Login</a></p>
+      <p><a href="${BASE_URL}/login">Go to Login</a></p>
     </div>
   </body>
   </html>
